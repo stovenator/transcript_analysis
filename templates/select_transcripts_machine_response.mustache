@@ -1,0 +1,19 @@
+USE TRANSCRIPTS;
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
+
+
+SELECT
+  mres.TRANSCRIPT_ID,
+  mreq.PROVIDER,
+  mres.CONTENT,
+  mres.CREATE_DATE_UTC,
+  mreq.RECORDING_ID,
+  mreq.consultation_participant_id as cpid
+FROM MACHINE_RESPONSE mres 
+JOIN MACHINE_REQUEST mreq on mres.TRANSCRIPT_ID = mreq.TRANSCRIPT_ID
+WHERE 
+  mres.create_date_utc  > DATEADD(dd, -3, GETUTCDATE())
+AND
+  mreq.consultation_participant_id not IN (-1{{#cpids}},'{{.}}'{{/cpids}})
+ORDER BY mreq.recording_id DESC
