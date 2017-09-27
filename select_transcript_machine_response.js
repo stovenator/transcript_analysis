@@ -24,6 +24,15 @@ const fetch = function(args) {
     .catch(err => console.error(err));
 };
 
+const mkdir = () => {
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(pathName)){
+        fs.mkdirSync(pathName);
+    }
+    resolve('');
+  });
+}
+
 const getExistingFiles = () => {
   return new Promise((resolve, reject) => {
     var results = [];
@@ -120,6 +129,7 @@ const transformFinal = (data) => {
 
 
 Promise.resolve('')
+  .then(mkdir)
   .then(getExistingFiles)
   .then(fetch)
   .then(transform)
